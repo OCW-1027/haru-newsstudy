@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>はるの英語ニュースボックス</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --paper:#FBFCFE;
+  --ink:#1F3A5F;
+  --ink-soft:#4A6283;
+  --sky:#DCEBF7;
+  --red:#C8332B;
+  --sun:#F2C14E;
+  --leaf:#3E8E6B;
+  --line:#C9D8E8;
+  --card:#FFFFFF;
+  --shadow:0 2px 0 #1F3A5F22;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#101B2B; --ink:#E6EEF8; --ink-soft:#A9BCD4; --sky:#1B2C44;
+    --red:#F0776F; --sun:#F2C14E; --leaf:#6CC49D; --line:#2C4262; --card:#16243A; --shadow:0 2px 0 #00000055;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#101B2B; --ink:#E6EEF8; --ink-soft:#A9BCD4; --sky:#1B2C44;
+  --red:#F0776F; --sun:#F2C14E; --leaf:#6CC49D; --line:#2C4262; --card:#16243A; --shadow:0 2px 0 #00000055;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Hiragino Sans","Yu Gothic",sans-serif;
+  font-size:1rem;line-height:1.75;
+}
+.en{font-family:"Fredoka","Arial Rounded MT Bold","Helvetica Neue",Arial,sans-serif}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--sun);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+
+/* hero */
+header.hero{background:var(--sky);border-bottom:3px dashed var(--line);padding:44px 0 36px}
+.hero-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:28px;align-items:center}
+.hero h1{font-weight:900;font-size:clamp(1.9rem,5vw,2.9rem);line-height:1.25;margin:0 0 12px}
+.hero h1 .en{display:block;font-size:.5em;color:var(--red);letter-spacing:.02em;margin-bottom:6px}
+.hero p{margin:0;max-width:34em;color:var(--ink-soft)}
+.mailbag{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.pm{
+  width:96px;height:96px;border-radius:50%;border:3px double var(--ink);
+  display:grid;place-items:center;text-align:center;font-size:.72rem;line-height:1.2;
+  transform:rotate(var(--r,-8deg));background:var(--card);
+}
+.pm b{display:block;font-family:"Fredoka",sans-serif;font-size:1.35rem;color:var(--red)}
+
+/* level note */
+.level{margin:28px 0 8px;display:flex;flex-wrap:wrap;gap:10px 22px;font-size:.92rem;color:var(--ink-soft)}
+.level span{display:inline-flex;align-items:center;gap:6px}
+.dot{width:14px;height:14px;border-radius:50%;display:inline-block}
+.d1{background:var(--leaf)}.d2{background:var(--sun)}.d3{background:var(--red)}
+
+/* filters */
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 22px}
+.filters button{
+  font:inherit;font-size:.92rem;font-weight:700;color:var(--ink);background:var(--card);
+  border:2px solid var(--ink);border-radius:999px;padding:6px 16px;cursor:pointer;
+}
+.filters button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+
+h2{font-size:1.45rem;font-weight:900;margin:44px 0 6px}
+.lead{margin:0 0 18px;color:var(--ink-soft)}
+
+/* stamps */
+.stamps{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:22px}
+.stamp{
+  position:relative;background:var(--card);padding:20px 20px 18px;
+  border:2px solid var(--ink);box-shadow:var(--shadow);
+  border-radius:14px;overflow:hidden;outline:2px dashed var(--line);outline-offset:4px;
+  display:flex;flex-direction:column;gap:10px;
+}
+.stamp.top{border-width:3px}
+.stamp-head{padding-right:40px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.country{font-family:"Fredoka",sans-serif;font-weight:700;font-size:.8rem;border:2px solid var(--red);color:var(--red);border-radius:6px;padding:0 7px;white-space:nowrap}
+.stamp h3{margin:0;font-family:"Fredoka","Zen Maru Gothic",sans-serif;font-size:1.3rem;line-height:1.25}
+.stamp h3 small{display:block;font-family:"Zen Maru Gothic",sans-serif;font-size:.78rem;font-weight:500;color:var(--ink-soft)}
+.stamp p{margin:0;font-size:.95rem}
+.tags{display:flex;flex-wrap:wrap;gap:6px;font-size:.78rem}
+.tags span{background:var(--sky);border-radius:6px;padding:1px 8px}
+.meta{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;padding-top:6px;border-top:2px dashed var(--line)}
+.lv{display:inline-flex;align-items:center;gap:6px;font-size:.85rem;font-weight:700}
+.go{
+  font-weight:700;font-size:.95rem;text-decoration:none;background:var(--ink);color:var(--paper);
+  padding:7px 16px;border-radius:10px;white-space:nowrap
+}
+.go:hover{background:var(--red)}
+.pick{position:absolute;top:14px;right:-34px;transform:rotate(35deg);background:var(--sun);color:#1F3A5F;font-weight:900;font-size:.72rem;padding:2px 40px}
+.hint{font-size:.82rem;color:var(--ink-soft);background:var(--sky);border-radius:8px;padding:6px 10px}
+.hidden{display:none}
+
+/* week */
+.week{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.day{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:12px}
+.day b{display:block;font-size:1.3rem;color:var(--red)}
+.day span{font-size:.88rem}
+
+/* steps */
+ol.steps{list-style:none;padding:0;margin:0;counter-reset:s;display:grid;gap:12px;max-width:760px}
+ol.steps li{counter-increment:s;display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:start}
+ol.steps li::before{content:counter(s);width:40px;height:40px;border-radius:50%;background:var(--sun);color:#1F3A5F;display:grid;place-items:center;font-family:"Fredoka",sans-serif;font-weight:700;font-size:1.2rem}
+ol.steps li strong{display:block}
+
+/* notebook */
+.note{background:var(--card);border:2px solid var(--ink);border-radius:16px;padding:18px;max-width:760px}
+.note form{display:grid;grid-template-columns:1fr 1fr auto;gap:8px}
+.note input{font:inherit;padding:8px 10px;border:2px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);min-width:0}
+.note button{font:inherit;font-weight:700;border:0;border-radius:10px;padding:8px 14px;background:var(--red);color:#fff;cursor:pointer}
+.words{list-style:none;padding:0;margin:14px 0 0;display:grid;gap:6px}
+.words li{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dashed var(--line);padding:4px 0}
+.words .w{font-family:"Fredoka",sans-serif;font-weight:600}
+.words button{background:none;color:var(--ink-soft);padding:0 6px;font-size:.85rem}
+.empty{color:var(--ink-soft);font-size:.9rem;margin:12px 0 0}
+
+.parents{max-width:760px;background:var(--sky);border-radius:16px;padding:18px 22px}
+.parents ul{margin:6px 0 0;padding-left:1.2em}
+footer{margin:56px 0 30px;font-size:.82rem;color:var(--ink-soft)}
+
+@media (max-width:720px){
+  .hero-grid{grid-template-columns:1fr}
+  .mailbag{justify-content:flex-start}
+  .pm{width:80px;height:80px}
+  .note form{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:no-preference){
+  .pm{animation:drop .6s ease-out both}
+  .pm:nth-child(2){animation-delay:.12s}.pm:nth-child(3){animation-delay:.24s}
+  @keyframes drop{from{opacity:0;transform:translateY(-14px) rotate(var(--r))}to{opacity:1;transform:rotate(var(--r))}}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <h1><span class="en">Haru's English News Box</span>はるの英語ニュースボックス</h1>
+      <p>英検2級くらいのレベルで読める、無料の子ども向け英語ニュースを集めました。アメリカ・イギリス・オーストラリアから毎日ニュースが届きます。まずは「まずはここから」の3つから始めてみましょう。</p>
+    </div>
+    <div class="mailbag" aria-hidden="true">
+      <div class="pm" style="--r:-10deg"><div><b>USA</b>アメリカ</div></div>
+      <div class="pm" style="--r:6deg"><div><b>UK</b>イギリス</div></div>
+      <div class="pm" style="--r:-4deg"><div><b>AUS</b>オースト<br>ラリア</div></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="level" aria-label="むずかしさの目安">
+    <span><i class="dot d1"></i>やさしい（すらすら読める）</span>
+    <span><i class="dot d2"></i>ちょうどいい（英検2級レベル）</span>
+    <span><i class="dot d3"></i>ちょっと背伸び（準1級に向けて）</span>
+  </div>
+
+  <div class="filters" role="group" aria-label="しぼりこみ">
+    <button type="button" data-f="all" aria-pressed="true">ぜんぶ</button>
+    <button type="button" data-f="read" aria-pressed="false">読む</button>
+    <button type="button" data-f="video" aria-pressed="false">動画・リスニング</button>
+    <button type="button" data-f="science" aria-pressed="false">科学・宇宙</button>
+    <button type="button" data-f="level" aria-pressed="false">レベルを選べる</button>
+  </div>
+
+  <h2>まずはここから</h2>
+  <p class="lead">いちばんおすすめの3サイトです。毎日どれか1つを開けばOK。</p>
+
+  <div class="stamps">
+    <article class="stamp top" data-tags="read level">
+      <span class="pick">おすすめ</span>
+      <div class="stamp-head"><h3>News for Kids<small>ニュース・フォー・キッズ</small></h3><span class="country">USA</span></div>
+      <p>世界のニュースを子ども向けのやさしい英語で書き直したサイト。記事が短く、英検2級レベルにいちばん合っています。</p>
+      <div class="tags"><span>読む</span><span>世界のニュース</span><span>短い記事</span></div>
+      <div class="meta"><span class="lv"><i class="dot d2"></i>ちょうどいい</span><a class="go" href="https://newsforkids.net/" target="_blank" rel="noopener">サイトを開く</a></div>
+    </article>
+
+    <article class="stamp top" data-tags="video read">
+      <span class="pick">おすすめ</span>
+      <div class="stamp-head"><h3>Behind the News<small>ABC BTN</small></h3><span class="country">AUS</span></div>
+      <p>オーストラリアの公共放送ABCの子ども向けニュース番組。動画と英文（Transcript）がセットなので、聞く＋読むの両方ができます。</p>
+      <div class="tags"><span>動画</span><span>英文スクリプト付き</span><span>リスニング</span></div>
+      <div class="meta"><span class="lv"><i class="dot d2"></i>ちょうどいい</span><a class="go" href="https://www.abc.net.au/btn" target="_blank" rel="noopener">サイトを開く</a></div>
+    </article>
+
+    <article class="stamp top" data-tags="read video">
+      <span class="pick">おすすめ</span>
+      <div class="stamp-head"><h3>BBC Newsround<small>BBC ニュースラウンド</small></h3><span class="country">UK</span></div>
+      <p>イギリスBBCの子ども向けニュース。時事問題・スポーツ・動物など話題が広く、イギリス英語にも触れられます。</p>
+      <div class="tags"><span>読む</span><span>時事問題</span><span>イギリス英語</span></div>
+      <div class="meta"><span class="lv"><i class="dot d2"></i>ちょうどいい</span><a class="go" href="https://www.bbc.co.uk/newsround" target="_blank" rel="noopener">サイトを開く</a></div>
+      <p class="hint">※ 動画は日本から再生できないことがあります。記事（文章）は読めます。</p>
+    </article>
+  </div>
+
+  <h2>もっと読みたいときに</h2>
+  <p class="lead">テーマや気分で選べるサイトです。好きなジャンルから広げていきましょう。</p>
+
+  <div class="stamps">
+    <article class="stamp" data-tags="read science">
+      <div class="stamp-head"><h3>Science News Explores<small>サイエンス・ニュース・エクスプローズ</small></h3><span class="country">USA</span></div>
+      <p>科学・宇宙・AI・動物などの記事がたくさん。理科が好きならここ。記事はやや長めなので、少しずつ読んでOK。</p>
+      <div class="tags"><span>科学</span><span>宇宙</span><span>AI・動物</span></div>
+      <div class="meta"><span class="lv"><i class="dot d3"></i>ちょっと背伸び</span><a class="go" href="https://www.snexplores.org/" target="_blank" rel="noopener">サイトを開く</a></div>
+    </article>
+
+    <article class="stamp" data-tags="read">
+      <div class="stamp-head"><h3>DOGOnews<small>ドゴニュース</small></h3><span class="country">USA</span></div>
+      <p>短くて読みやすいニュースが多く、英語ニュースに慣れていないときのウォーミングアップにぴったり。</p>
+      <div class="tags"><span>読む</span><span>短い記事</span><span>いろんな話題</span></div>
+      <div class="meta"><span class="lv"><i class="dot d1"></i>やさしい</span><a class="go" href="https://www.dogonews.com/" target="_blank" rel="noopener">サイトを開く</a></div>
+    </article>
+
+    <article class="stamp" data-tags="read">
+      <div class="stamp-head"><h3>First News Free<small>ファースト・ニュース</small></h3><span class="country">UK</span></div>
+      <p>イギリスの子ども向け新聞。一部を無料で読めます。新聞らしい書き方に慣れる練習になります。</p>
+      <div class="tags"><span>読む</span><span>子ども新聞</span><span>一部無料</span></div>
+      <div class="meta"><span class="lv"><i class="dot d2"></i>ちょうどいい</span><a class="go" href="https://subscribe.firstnews.co.uk/first-news-free/" target="_blank" rel="noopener">サイトを開く</a></div>
+    </article>
+
+    <article class="stamp" data-tags="read">
+      <div class="stamp-head"><h3>Kids News<small>キッズニュース</small></h3><span class="country">AUS</span></div>
+      <p>オーストラリアの子ども向けニュース。記事の最後に単語の説明やクイズがあり、読んだあとに確認できます。</p>
+      <div class="tags"><span>読む</span><span>単語解説</span><span>クイズ</span></div>
+      <div class="meta"><span class="lv"><i class="dot d2"></i>ちょうどいい</span><a class="go" href="https://www.kidsnews.com.au/" target="_blank" rel="noopener">サイトを開く</a></div>
+    </article>
+
+    <article class="stamp" data-tags="video">
+      <div class="stamp-head"><h3>CNN 10<small>シーエヌエヌ・テン</small></h3><span class="country">USA</span></div>
+      <p>中高生向けの10分ニュース動画。本物のニュース英語で少し速めですが、字幕や書き起こしを使えば聞き取りの力がぐんと伸びます。</p>
+      <div class="tags"><span>動画</span><span>10分</span><span>リスニング</span></div>
+      <div class="meta"><span class="lv"><i class="dot d3"></i>ちょっと背伸び</span><a class="go" href="https://edition.cnn.com/cnn10" target="_blank" rel="noopener">サイトを開く</a></div>
+      <p class="hint">※ 広告が流れることがあります。</p>
+    </article>
+
+    <article class="stamp" data-tags="video read level">
+      <div class="stamp-head"><h3>VOA Learning English<small>ボイス・オブ・アメリカ</small></h3><span class="country">USA</span></div>
+      <p>英語を学ぶ人向けに、使う単語を少なくして、ゆっくり読み上げるニュース。音声と英文がセットで、音読の練習にもおすすめ。</p>
+      <div class="tags"><span>音声</span><span>ゆっくり英語</span><span>レベル別</span></div>
+      <div class="meta"><span class="lv"><i class="dot d2"></i>ちょうどいい</span><a class="go" href="https://learningenglish.voanews.com/" target="_blank" rel="noopener">サイトを開く</a></div>
+    </article>
+
+    <article class="stamp" data-tags="read level video">
+      <div class="stamp-head"><h3>News in Levels<small>ニュース・イン・レベルズ</small></h3><span class="country">英語学習</span></div>
+      <p>同じニュースを Level 1・2・3 の3段階で読めて、音声もあります。まずLevel 2、慣れたらLevel 3に挑戦。</p>
+      <div class="tags"><span>3段階レベル</span><span>音声付き</span></div>
+      <div class="meta"><span class="lv"><i class="dot d1"></i>レベルを選べる</span><a class="go" href="https://www.newsinlevels.com/" target="_blank" rel="noopener">サイトを開く</a></div>
+    </article>
+
+    <article class="stamp" data-tags="read level">
+      <div class="stamp-head"><h3>Breaking News English<small>ブレイキング・ニュース・イングリッシュ</small></h3><span class="country">英語学習</span></div>
+      <p>1つのニュースを7つのレベルで読めるサイト。穴うめや並べかえなどの練習問題もついています。</p>
+      <div class="tags"><span>7段階レベル</span><span>練習問題</span></div>
+      <div class="meta"><span class="lv"><i class="dot d1"></i>レベルを選べる</span><a class="go" href="https://breakingnewsenglish.com/" target="_blank" rel="noopener">サイトを開く</a></div>
+      <p class="hint">※ 広告が多めのサイトです。</p>
+    </article>
+
+    <article class="stamp" data-tags="read science">
+      <div class="stamp-head"><h3>Wonderopolis<small>ワンダーオポリス</small></h3><span class="country">USA</span></div>
+      <p>「なぜ空は青いの？」のような「ふしぎ」に毎日1つ答えてくれるサイト。ニュースに疲れたときの気分転換に。</p>
+      <div class="tags"><span>なぜ？なに？</span><span>科学</span><span>毎日更新</span></div>
+      <div class="meta"><span class="lv"><i class="dot d2"></i>ちょうどいい</span><a class="go" href="https://wonderopolis.org/" target="_blank" rel="noopener">サイトを開く</a></div>
+    </article>
+
+    <article class="stamp" data-tags="read science">
+      <div class="stamp-head"><h3>NASA Space Place<small>ナサ・スペースプレイス</small></h3><span class="country">USA</span></div>
+      <p>NASAの子ども向けページ。宇宙・惑星・天気のしくみを、やさしい英語とイラストで説明しています。</p>
+      <div class="tags"><span>宇宙</span><span>地球</span><span>ゲームあり</span></div>
+      <div class="meta"><span class="lv"><i class="dot d1"></i>やさしい</span><a class="go" href="https://spaceplace.nasa.gov/" target="_blank" rel="noopener">サイトを開く</a></div>
+    </article>
+
+    <article class="stamp" data-tags="read science video">
+      <div class="stamp-head"><h3>Nat Geo Kids<small>ナショナルジオグラフィック キッズ</small></h3><span class="country">USA</span></div>
+      <p>動物・自然・歴史の記事や動画がたっぷり。写真がきれいなので、写真から内容を想像しながら読めます。</p>
+      <div class="tags"><span>動物</span><span>自然</span><span>写真・動画</span></div>
+      <div class="meta"><span class="lv"><i class="dot d1"></i>やさしい</span><a class="go" href="https://kids.nationalgeographic.com/" target="_blank" rel="noopener">サイトを開く</a></div>
+    </article>
+
+    <article class="stamp" data-tags="read">
+      <div class="stamp-head"><h3>TIME for Kids<small>タイム・フォー・キッズ</small></h3><span class="country">USA</span></div>
+      <p>アメリカの雑誌TIMEの子ども版。学年別に記事が分かれています。無料で読める記事は一部です。</p>
+      <div class="tags"><span>読む</span><span>学年別</span><span>一部無料</span></div>
+      <div class="meta"><span class="lv"><i class="dot d2"></i>ちょうどいい</span><a class="go" href="https://www.timeforkids.com/" target="_blank" rel="noopener">サイトを開く</a></div>
+    </article>
+  </div>
+
+  <h2>1週間のおすすめスケジュール</h2>
+  <p class="lead">1日10〜15分でOK。毎日ちがうサイトを開くと飽きずに続けられます。</p>
+  <div class="week">
+    <div class="day"><b>月</b><span>News for Kids で1記事</span></div>
+    <div class="day"><b>火</b><span>BTN の動画を見て、英文も読む</span></div>
+    <div class="day"><b>水</b><span>BBC Newsround で1記事</span></div>
+    <div class="day"><b>木</b><span>News in Levels を Level 2→3 で</span></div>
+    <div class="day"><b>金</b><span>好きなジャンル（科学・動物など）</span></div>
+    <div class="day"><b>土</b><span>今週の単語メモを見なおす</span></div>
+    <div class="day"><b>日</b><span>おやすみ、または家族にニュース紹介</span></div>
+  </div>
+
+  <h2>ニュースの読み方</h2>
+  <p class="lead">この順番で読むと、英語の力と「考える力」の両方が伸びます。</p>
+  <ol class="steps">
+    <li><div><strong>タイトルと写真を見て、どんな話か予想する</strong>予想してから読むと、知らない単語があっても意味をつかみやすくなります。</div></li>
+    <li><div><strong>1回目は辞書を使わずに最後まで読む</strong>わからないところは飛ばしてOK。全体の流れをつかむのが目的です。</div></li>
+    <li><div><strong>大事そうな知らない単語を3つだけ調べる</strong>全部調べると疲れるので、3つまで。下の「単語メモ」に書いておきましょう。</div></li>
+    <li><div><strong>日本語で3文にまとめる</strong>「だれが・何を・どうした」を言えれば、内容をしっかり理解できています。</div></li>
+    <li><div><strong>英語で一言、感想を言う</strong>I think… / I was surprised that… など。英検の面接やライティングの練習にもなります。</div></li>
+  </ol>
+
+  <h2>今日の単語メモ</h2>
+  <p class="lead">調べた単語をここに書いておけます。この端末のブラウザに保存されます。</p>
+  <div class="note">
+    <form id="wordForm" autocomplete="off">
+      <input id="wEn" class="en" placeholder="英単語（例：climate）" aria-label="英単語" required>
+      <input id="wJa" placeholder="意味（例：気候）" aria-label="意味" required>
+      <button type="submit">メモする</button>
+    </form>
+    <ul class="words" id="wordList"></ul>
+    <p class="empty" id="emptyMsg">まだ単語はありません。読んだニュースから3つ書いてみよう。</p>
+  </div>
+
+  <h2>おうちの方へ</h2>
+  <div class="parents">
+    <ul>
+      <li>すべて海外のサイトです。リンク先に広告や、ほかのページへのリンクが出ることがあります。</li>
+      <li>戦争や災害など、つらいニュースが出ることもあります。気になる記事があれば、一緒に読んで話してあげてください。</li>
+      <li>「今日はどんなニュースだった？」と聞いて、日本語でも英語でも説明してもらうと、理解がぐっと深まります。</li>
+      <li>続けることがいちばん大切です。読めた日はたくさんほめてあげてください。</li>
+    </ul>
+  </div>
+
+  <footer>サイトの内容・無料範囲は変わることがあります。2026年9月時点でまとめました。</footer>
+</main>
+
+<script>
+(function(){
+  // filters
+  var btns=document.querySelectorAll('.filters button');
+  var cards=document.querySelectorAll('.stamp');
+  btns.forEach(function(b){
+    b.addEventListener('click',function(){
+      var f=b.dataset.f;
+      btns.forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false')});
+      cards.forEach(function(c){
+        var show=f==='all'||(c.dataset.tags||'').split(' ').indexOf(f)>-1;
+        c.classList.toggle('hidden',!show);
+      });
+    });
+  });
+
+  // word notebook
+  var KEY='haru-news-words';
+  var list=document.getElementById('wordList');
+  var empty=document.getElementById('emptyMsg');
+  var words=[];
+  try{words=JSON.parse(localStorage.getItem(KEY)||'[]')||[]}catch(e){words=[]}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(words))}catch(e){}}
+  function render(){
+    list.innerHTML='';
+    words.forEach(function(w,i){
+      var li=document.createElement('li');
+      var left=document.createElement('span');
+      var en=document.createElement('span');en.className='w';en.textContent=w.en;
+      left.appendChild(en);left.appendChild(document.createTextNode('　'+w.ja));
+      var del=document.createElement('button');del.type='button';del.textContent='けす';
+      del.setAttribute('aria-label',w.en+' をけす');
+      del.addEventListener('click',function(){words.splice(i,1);save();render()});
+      li.appendChild(left);li.appendChild(del);list.appendChild(li);
+    });
+    empty.style.display=words.length?'none':'block';
+  }
+  document.getElementById('wordForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    var en=document.getElementById('wEn'),ja=document.getElementById('wJa');
+    if(!en.value.trim()||!ja.value.trim())return;
+    words.unshift({en:en.value.trim(),ja:ja.value.trim()});
+    save();render();en.value='';ja.value='';en.focus();
+  });
+  render();
+})();
+</script>
+</body>
+</html>
