@@ -130,6 +130,25 @@ ol.steps li strong{display:block}
 .parents ul{margin:6px 0 0;padding-left:1.2em}
 footer{margin:56px 0 30px;font-size:.82rem;color:var(--ink-soft)}
 
+/* ハルゲーム 連動 */
+.gamelink{display:inline-flex;align-items:center;gap:8px;margin-top:16px;font-weight:700;text-decoration:none;background:var(--card);color:var(--ink);border:2px solid var(--ink);border-radius:999px;padding:6px 16px;box-shadow:var(--shadow)}
+.gamelink:hover{background:var(--sun);color:#1F3A5F}
+.stampcard{margin:26px 0 0;background:var(--card);border:2px solid var(--ink);border-radius:16px;padding:16px 18px;box-shadow:var(--shadow)}
+.stampcard h2{margin:0 0 4px;font-size:1.2rem}
+.stampcard .sub{margin:0 0 12px;color:var(--ink-soft);font-size:.9rem}
+.sweek{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;max-width:520px}
+.sday{border:2px dashed var(--line);border-radius:12px;text-align:center;padding:4px 0;font-weight:700;color:var(--ink-soft)}
+.sday b{display:block;font-size:1.3rem;line-height:1.4;min-height:1.6em}
+.sday.ok{border-style:solid;border-color:var(--red);color:var(--red)}
+.sday.td{box-shadow:0 0 0 2px var(--sun)}
+.sday.fut{opacity:.45}
+.readbtn{font:inherit;font-weight:900;margin-top:12px;border:0;border-radius:12px;padding:10px 18px;background:var(--red);color:#fff;cursor:pointer;box-shadow:0 3px 0 #8f211b}
+.readbtn[disabled]{background:var(--leaf);box-shadow:none;cursor:default}
+.opened{margin:8px 0 0;font-size:.85rem;color:var(--ink-soft)}
+.words .say{background:var(--sky);border-radius:50%;width:28px;height:28px;padding:0;color:var(--ink);margin-right:6px;flex:none}
+.words li > span:first-child{display:flex;align-items:center;flex-wrap:wrap;min-width:0}
+.words .src{font-size:.75rem;color:var(--ink-soft);margin-left:6px}
+
 @media (max-width:720px){
   .hero-grid{grid-template-columns:1fr}
   .mailbag{justify-content:flex-start}
@@ -150,6 +169,7 @@ footer{margin:56px 0 30px;font-size:.82rem;color:var(--ink-soft)}
     <div>
       <h1><span class="en">Haru's English News Box</span>はるの英語ニュースボックス</h1>
       <p>英検2級くらいのレベルで読める、無料の子ども向け英語ニュースを集めました。アメリカ・イギリス・オーストラリアから毎日ニュースが届きます。まずは「まずはここから」の3つから始めてみましょう。</p>
+      <a class="gamelink" href="https://ocw-1027.github.io/haru-rio-detective/" id="toGame">🔍 ハルゲームへ（単語クイズ・ごほうび）</a>
     </div>
     <div class="mailbag" aria-hidden="true">
       <div class="pm" style="--r:-10deg"><div><b>USA</b>アメリカ</div></div>
@@ -160,6 +180,14 @@ footer{margin:56px 0 30px;font-size:.82rem;color:var(--ink-soft)}
 </header>
 
 <main class="wrap">
+
+  <section class="stampcard" aria-labelledby="stampH">
+    <h2 id="stampH">📅 今週の読書スタンプ</h2>
+    <p class="sub">ニュースを読んだら「今日読んだ！」をおそう。ハルゲームの「英語ニュース」で <b>ゲームトークン +1</b> がもらえます（1日1回）。</p>
+    <div class="sweek" id="sweek"></div>
+    <button type="button" class="readbtn" id="readBtn">📖 今日読んだ！</button>
+    <p class="opened" id="opened"></p>
+  </section>
 
   <div class="level" aria-label="むずかしさの目安">
     <span><i class="dot d1"></i>やさしい（すらすら読める）</span>
@@ -319,7 +347,7 @@ footer{margin:56px 0 30px;font-size:.82rem;color:var(--ink-soft)}
   </ol>
 
   <h2>今日の単語メモ</h2>
-  <p class="lead">調べた単語をここに書いておけます。この端末のブラウザに保存されます。</p>
+  <p class="lead">調べた単語をここに書いておけます。この端末のブラウザに保存され、<b>ハルゲームの「英語ニュース」で単語クイズ</b>になります（同じ端末・同じブラウザで開いたとき）。</p>
   <div class="note">
     <form id="wordForm" autocomplete="off">
       <input id="wEn" class="en" placeholder="英単語（例：climate）" aria-label="英単語" required>
@@ -340,7 +368,7 @@ footer{margin:56px 0 30px;font-size:.82rem;color:var(--ink-soft)}
     </ul>
   </div>
 
-  <footer>サイトの内容・無料範囲は変わることがあります。2026年9月時点でまとめました。</footer>
+  <footer>サイトの内容・無料範囲は変わることがあります。2026年9月時点でまとめました。<br>読書スタンプと単語メモは <a href="https://ocw-1027.github.io/haru-rio-detective/">ハルゲーム</a> の「英語ニュース」とつながっています。</footer>
 </main>
 
 <script>
@@ -359,6 +387,33 @@ footer{margin:56px 0 30px;font-size:.82rem;color:var(--ink-soft)}
     });
   });
 
+  // ハルゲーム 連動: 読書記録 (localStorage 'haru-news-log' = { 'YYYY-MM-DD': { open:[サイト名], read:1 } })
+  // ゲーム (ocw-1027.github.io/haru-rio-detective/) と 同じ オリジンなので、ゲーム側で スタンプ・トークンに なる
+  var LKEY='haru-news-log';
+  function ymd(d){d=d||new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
+  function getLog(){try{var l=JSON.parse(localStorage.getItem(LKEY)||'{}');return l&&typeof l==='object'?l:{}}catch(e){return {}}}
+  function setLog(l){try{localStorage.setItem(LKEY,JSON.stringify(l))}catch(e){}}
+  function today(){var l=getLog(),k=ymd();l[k]=l[k]||{};l[k].open=l[k].open||[];return {l:l,d:l[k]}}
+  function siteName(a){var c=a.closest('.stamp');var h=c&&c.querySelector('h3');return h?(h.firstChild&&h.firstChild.nodeValue||h.textContent).trim():a.href}
+  var lastSite='';
+  document.querySelectorAll('a.go').forEach(function(a){
+    a.addEventListener('click',function(){var t=today(),n=siteName(a);lastSite=n;if(t.d.open.indexOf(n)<0)t.d.open.push(n);setLog(t.l);renderStamps()});
+  });
+  function renderStamps(){
+    var l=getLog(),now=new Date(),dow=(now.getDay()+6)%7,td=ymd(),h='';
+    ['月','火','水','木','金','土','日'].forEach(function(n,i){
+      var d=new Date(now.getTime()+(i-dow)*864e5),k=ymd(d),e=l[k],ok=!!(e&&(e.read||(e.open&&e.open.length)));
+      h+='<div class="sday'+(ok?' ok':'')+(k===td?' td':'')+(i>dow?' fut':'')+'">'+n+'<b>'+(ok?'📰':(i>dow?'':'・'))+'</b></div>';
+    });
+    document.getElementById('sweek').innerHTML=h;
+    var e=l[td]||{},btn=document.getElementById('readBtn');
+    btn.disabled=!!e.read;btn.textContent=e.read?'✅ 今日のスタンプ OK！':'📖 今日読んだ！';
+    var op=(e.open||[]);document.getElementById('opened').textContent=op.length?('今日ひらいたサイト：'+op.join('・')):'';
+  }
+  document.getElementById('readBtn').addEventListener('click',function(){var t=today();t.d.read=1;setLog(t.l);renderStamps()});
+  renderStamps();
+  window.addEventListener('focus',renderStamps);
+
   // word notebook
   var KEY='haru-news-words';
   var list=document.getElementById('wordList');
@@ -371,8 +426,11 @@ footer{margin:56px 0 30px;font-size:.82rem;color:var(--ink-soft)}
     words.forEach(function(w,i){
       var li=document.createElement('li');
       var left=document.createElement('span');
+      var say=document.createElement('button');say.type='button';say.className='say';say.textContent='🔊';say.setAttribute('aria-label',w.en+' の発音');
+      say.addEventListener('click',function(){try{speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(w.en);u.lang='en-US';u.rate=.85;speechSynthesis.speak(u)}catch(e){}});
       var en=document.createElement('span');en.className='w';en.textContent=w.en;
-      left.appendChild(en);left.appendChild(document.createTextNode('　'+w.ja));
+      left.appendChild(say);left.appendChild(en);left.appendChild(document.createTextNode('　'+w.ja));
+      if(w.src){var sr=document.createElement('span');sr.className='src';sr.textContent='（'+w.src+'）';left.appendChild(sr)}
       var del=document.createElement('button');del.type='button';del.textContent='けす';
       del.setAttribute('aria-label',w.en+' をけす');
       del.addEventListener('click',function(){words.splice(i,1);save();render()});
@@ -384,7 +442,10 @@ footer{margin:56px 0 30px;font-size:.82rem;color:var(--ink-soft)}
     e.preventDefault();
     var en=document.getElementById('wEn'),ja=document.getElementById('wJa');
     if(!en.value.trim()||!ja.value.trim())return;
-    words.unshift({en:en.value.trim(),ja:ja.value.trim()});
+    var src=lastSite;if(!src){var td=getLog()[ymd()];if(td&&td.open&&td.open.length)src=td.open[td.open.length-1]}
+    var item={en:en.value.trim(),ja:ja.value.trim(),t:Date.now()};if(src)item.src=src;
+    words=words.filter(function(x){return x.en.toLowerCase()!==item.en.toLowerCase()});
+    words.unshift(item);
     save();render();en.value='';ja.value='';en.focus();
   });
   render();
